@@ -1,6 +1,6 @@
 unless defined?(RAILS_ROOT)
   require 'rubygems'
-  require 'activesupport'
+  require 'active_support'
 end
 
 module DemetersRevenge

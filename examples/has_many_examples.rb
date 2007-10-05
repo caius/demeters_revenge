@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'spec'
-require 'activerecord'
+require 'active_record'
 require 'fileutils'
 require File.join(File.dirname(__FILE__), *%w[../lib/demeters_revenge])
 
