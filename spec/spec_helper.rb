@@ -7,6 +7,15 @@ rescue LoadError
   exit 1
 end
 
+require File.join(File.dirname(__FILE__), *%w[../lib/demeters_revenge])
+
 Spec::Runner.configure do |config|
   config.mock_with :mocha
+end
+
+class ActiveRecordStub
+  class << self
+    def has_many(name, *args); end
+    def belongs_do(name, *args); end
+  end
 end

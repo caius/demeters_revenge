@@ -17,6 +17,12 @@ namespace :spec do
     t.spec_opts  = %w(--color)
   end
   
+  desc "Run functional specs (requires sqlite3)"
+  Spec::Rake::SpecTask.new('examples') do |t|
+    t.spec_files = FileList['examples/**/*_examples.rb']
+    t.spec_opts  = %w(--color)
+  end
+  
   desc "Start up autotest for specs"
   task :auto do
     require 'spec/spec_autotest'
