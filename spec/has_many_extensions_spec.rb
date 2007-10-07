@@ -67,7 +67,7 @@ describe "ActiveRecord object after transmogrifiers injected for has_many :widge
   
 end
 
-describe "ActiveRecord object with has_many :widgets and transmogrifiers mixed in" do
+describe "ActiveRecord object with HasManyExtensions mixed in that has_many :widgets" do
   
   before(:all) do
     ActiveRecordStub.send(:include, DemetersRevenge::HasManyExtensions)

@@ -17,6 +17,12 @@ namespace :spec do
     t.spec_opts  = %w(--color)
   end
   
+  desc "Run all specs in the spec directory in specdox mode"
+  Spec::Rake::SpecTask.new('dox') do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts  = %w(--color -f specdoc)
+  end
+  
   desc "Run functional specs (requires sqlite3)"
   Spec::Rake::SpecTask.new('examples') do |t|
     t.spec_files = FileList['examples/**/*_examples.rb']
