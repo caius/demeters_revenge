@@ -11,8 +11,8 @@ describe "Person that has_many Widgets" do
       :adapter  => 'sqlite3',
       :database => 'examples.db'
     )
-    ActiveRecord::Base.connection.execute("CREATE TABLE people(id, name)")
-    ActiveRecord::Base.connection.execute("CREATE TABLE widgets(id, name, person_id)")
+    ActiveRecord::Base.connection.execute("CREATE TABLE people(id integer auto_increment primary_key, name)")
+    ActiveRecord::Base.connection.execute("CREATE TABLE widgets(id integer auto_increment primary_key, name varchar(255), person_id integer)")
 
     Person = Class.new(ActiveRecord::Base)
     Widget = Class.new(ActiveRecord::Base)
@@ -26,6 +26,11 @@ describe "Person that has_many Widgets" do
     @person = Person.create
   end
   
+  after(:each) do
+    Person.delete_all
+    Widget.delete_all
+  end
+  
   it "should be able to build widgets and report how many widgets it has" do
     @person.build_widget(:name => 'Widget One')
     @person.build_widget(:name => 'Widget Two')
@@ -36,6 +41,31 @@ describe "Person that has_many Widgets" do
     @person.create_widget(:name => 'Widget One')
     @person.create_widget(:name => 'Widget Two')
     @person.widget_count.should == 2
+  end
+  
+  it "should clear all widgets from the collection" do
+    @person.build_widget(:name => 'Widget One')
+    @person.clear_widgets
+    @person.number_of_widgets.should == 0
+  end
+  
+  it "should have no widgets by default" do
+    @person.should have_no_widgets
+  end
+  
+  it "should have widgets once at least on has been added" do
+    @person.create_widget(:name => 'Widget One')
+    @person.should have_widgets
+  end
+  
+  it "should be able to delete created widgets" do
+    widget = @person.create_widget
+    @person.delete_widget(widget)
+    @person.widget_count.should == 1
+  end
+  
+  it "should be able to find an existing widget" do
+    pending("Problem with sqlite")
   end
   
   after(:all) do

@@ -34,12 +34,12 @@ module DemetersRevenge
           send(plural_association_name).create(*args)
         end
         
-        define_method("delete_#{singular_association_name}") do
-          
+        define_method("delete_#{singular_association_name}") do |object|
+          send(plural_association_name).delete(object)
         end
         
         define_method("clear_#{plural_association_name}") do
-          
+          send(plural_association_name).clear
         end
         
         define_method("number_of_#{plural_association_name}") do
@@ -51,15 +51,15 @@ module DemetersRevenge
         end
         
         define_method("has_#{plural_association_name}?") do
-          
+          send(plural_association_name).any?
         end
         
         define_method("has_no_#{plural_association_name}?") do
-          
+          send(plural_association_name).empty?
         end
         
-        define_method("find_#{plural_association_name}") do
-          
+        define_method("find_#{plural_association_name}") do |*args|
+          send(plural_association_name).find(*args)
         end
       end
     end

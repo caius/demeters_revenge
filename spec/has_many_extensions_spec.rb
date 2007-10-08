@@ -106,4 +106,28 @@ describe "ActiveRecord object with HasManyExtensions mixed in that has_many :wid
     @object.number_of_widgets.should == 10
   end
   
+  it "should call clear on association proxy when calling clear_widgets" do
+    @association_proxy.expects(:clear)
+    @object.clear_widgets
+  end
+  
+  it "should call delete on association proxy with given object when calling delete_widget" do
+    @association_proxy.expects(:delete).with(another_object = stub)
+    @object.delete_widget(another_object)
+  end
+  
+  it "should return true for has_widgets? if association_proxy has any objects in its collection" do
+    @association_proxy.stubs(:any?).returns(true)
+    @object.has_widgets?.should be_true
+  end
+  
+  it "should return true for has_no_widgets? if association_proxy has no objects in its collection" do
+    @association_proxy.stubs(:empty?).returns(true)
+    @object.has_no_widgets?.should be_true
+  end
+  
+  it "should call find on association proxy with all arguments when calling find_widgets" do
+    @association_proxy.expects(:find).with('arg1', 'arg2', 'arg3')
+    @object.find_widgets('arg1', 'arg2', 'arg3')
+  end
 end
