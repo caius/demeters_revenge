@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), *%w[example_spec_helper])
 
-describe "Person that has_many Widgets" do
+describe "Person that has_and_belongs_to_many Widgets" do
   
   before(:all) do
     ExampleSpecHelper.create_example_database do
@@ -9,15 +9,19 @@ describe "Person that has_many Widgets" do
       end
     
       create_table :widgets, :force => true do |t|
-        t.integer :person_id
         t.string  :name
+      end
+      
+      create_table :people_widgets, :force => true do |t|
+        t.integer :person_id
+        t.integer :widget_id
       end
     end
     
     Person = Class.new(ActiveRecord::Base)
     Widget = Class.new(ActiveRecord::Base)
     
-    Person.send(:include, DemetersRevenge::HasManyExtensions)
+    Person.send(:include, DemetersRevenge::HasAndBelongsToManyExtensions)
   end
   
   after(:all) do
@@ -27,7 +31,7 @@ describe "Person that has_many Widgets" do
   end
   
   before(:each) do
-    Person.send(:has_many, :widgets)
+    Person.send(:has_and_belongs_to_many, :widgets)
     @person = Person.create
   end
   

@@ -16,6 +16,6 @@ end
 class ActiveRecordStub
   class << self
     def has_many(name, *args); end
-    def belongs_do(name, *args); end
+    def has_and_belongs_to_many(name, *args); end
   end
 end

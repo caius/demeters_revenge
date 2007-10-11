@@ -1,28 +1,28 @@
 require File.join(File.dirname(__FILE__), *%w[spec_helper])
 
-describe "ActiveRecord class with has_many extension mixed in" do
+describe "ActiveRecord class with has_and_belongs_to_many extension mixed in" do
   
-  before(:each) do
+  before do
     @klass = ActiveRecordStub.dup
-    @klass.send(:include, DemetersRevenge::HasManyExtensions)
+    @klass.send(:include, DemetersRevenge::HasAndBelongsToManyExtensions)
   end
   
-  it "should delegate to original has_many then inject transmogrifiers when calling has_many" do
-    @klass.expects(:has_many_without_transmogrifiers).with(:widgets)
+  it "should delegate to original has_and_belongs_to_many then inject has_many transmogrifiers when calling has_and_belongs_to_many" do
+    @klass.expects(:has_and_belongs_to_many_without_transmogrifiers).with(:widgets)
     DemetersRevenge::HasManyExtensions.expects(:inject_transmogrifiers).with(@klass, :widgets)
-    @klass.send(:has_many, :widgets)
+    @klass.send(:has_and_belongs_to_many, :widgets)
   end
   
   it "should raise if you try and include the extension more than once" do
     proc do 
-      @klass.send(:include, DemetersRevenge::HasManyExtensions)
+      @klass.send(:include, DemetersRevenge::HasAndBelongsToManyExtensions)
       
     end.should raise_error(DemetersRevenge::MultipleTransmogrification)
   end
   
 end
 
-describe "ActiveRecord object after transmogrifiers injected for has_many :widgets" do
+describe "ActiveRecord object after transmogrifiers injected for has_and_belongs_to_many :widgets" do
   
   before do
     @klass = ActiveRecordStub.dup
@@ -68,7 +68,7 @@ describe "ActiveRecord object after transmogrifiers injected for has_many :widge
   
 end
 
-describe "ActiveRecord object with HasManyExtensions mixed in that has_many :widgets" do
+describe "ActiveRecord object with HasAndBelongsToManyExtensions mixed in that has_and_belongs_to_many :widgets" do
   
   before(:all) do
     @klass = ActiveRecordStub.dup
