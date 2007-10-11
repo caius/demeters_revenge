@@ -1,18 +1,18 @@
-require 'rubygems'
-require 'spec'
-require 'active_record'
-require 'fileutils'
-require File.join(File.dirname(__FILE__), *%w[../lib/demeters_revenge])
+require File.join(File.dirname(__FILE__), *%w[example_spec_helper])
 
 describe "Person that has_many Widgets" do
   
   before(:all) do
-    ActiveRecord::Base.establish_connection(
-      :adapter  => 'sqlite3',
-      :database => 'examples.db'
-    )
-    ActiveRecord::Base.connection.execute("CREATE TABLE people(id integer auto_increment primary_key, name)")
-    ActiveRecord::Base.connection.execute("CREATE TABLE widgets(id integer auto_increment primary_key, name varchar(255), person_id integer)")
+    ExampleSpecHelper.create_example_database do
+      create_table :people, :force => true do |t|
+        t.string :name
+      end
+    
+      create_table :widgets, :force => true do |t|
+        t.integer :person_id
+        t.string  :name
+      end
+    end
 
     Person = Class.new(ActiveRecord::Base)
     Widget = Class.new(ActiveRecord::Base)
@@ -20,9 +20,12 @@ describe "Person that has_many Widgets" do
     Person.send(:include, DemetersRevenge::HasManyExtensions)
   end
   
+  after(:all) do
+    ExampleSpecHelper.destroy_example_database
+  end
+  
   before(:each) do
     Person.send(:has_many, :widgets)
-    
     @person = Person.create
   end
   
@@ -61,15 +64,12 @@ describe "Person that has_many Widgets" do
   it "should be able to delete created widgets" do
     widget = @person.create_widget
     @person.delete_widget(widget)
-    @person.widget_count.should == 1
+    @person.widget_count.should == 0
   end
   
   it "should be able to find an existing widget" do
-    pending("Problem with sqlite")
-  end
-  
-  after(:all) do
-    FileUtils.rm('examples.db')
+    widget = @person.create_widget
+    @person.find_widgets(:first).should == widget
   end
   
 end
